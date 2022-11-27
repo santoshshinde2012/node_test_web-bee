@@ -92,7 +92,10 @@ export class EventsService {
      */
 
   async getEventsWithWorkshops() {
-    throw new Error('TODO task 1');
+    return await this.eventRepository.createQueryBuilder('event')
+      .leftJoinAndSelect("event.workshops", "workshop")
+      .orderBy('workshop.id', 'ASC')
+      .getMany()
   }
 
   /* TODO: complete getFutureEventWithWorkshops so that it returns events with workshops, that have not yet started
