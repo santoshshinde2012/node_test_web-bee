@@ -1,10 +1,14 @@
-import { Repository } from 'typeorm';
-import { Event } from './entities/event.entity';
+import {
+  Repository
+} from 'typeorm';
+import {
+  Event
+} from './entities/event.entity';
 import App from "../../app";
 
 
 export class EventsService {
-  private eventRepository: Repository<Event>;
+  private eventRepository: Repository < Event > ;
 
   constructor(app: App) {
     this.eventRepository = app.getDataSource().getRepository(Event);
@@ -165,6 +169,12 @@ export class EventsService {
     ```
      */
   async getFutureEventWithWorkshops() {
-    throw new Error('TODO task 2');
+    return await this.eventRepository.createQueryBuilder('event')
+      .leftJoinAndSelect("event.workshops", "workshop")
+      .where("workshop.start > :today", {
+        today: new Date()
+      })
+      .orderBy('workshop.id', 'ASC')
+      .getMany()
   }
 }
